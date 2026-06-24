@@ -94,7 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function createDrop() {
   // Create a new div element that will be our water drop
   const drop = document.createElement("div");
-  drop.className = "water-drop";
+
+  // Decide randomly whether this is a bad drop (25% chance)
+  const isBad = Math.random() < 0.25;
+  drop.className = isBad ? "water-drop bad-drop" : "water-drop";
 
   // Make drops different sizes for visual variety
   const initialSize = 60;
@@ -116,7 +119,15 @@ function createDrop() {
 
   // Handle click events on the drop
   drop.addEventListener("click", () => {
-    score++; // Increment score
+    // Ignore clicks when the game is not running
+    if (!gameRunning) return;
+
+    if (drop.classList.contains("bad-drop")) {
+      score--; // Bad drops are worth -1
+    } else {
+      score++; // Good drop
+    }
+
     document.getElementById("score").textContent = score; // Update score display
     drop.remove(); // Remove the drop after clicking
   });
