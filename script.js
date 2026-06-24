@@ -100,6 +100,27 @@ document.addEventListener("DOMContentLoaded", () => {
       // Remove all drops (good and bad)
       const drops = document.querySelectorAll(".water-drop");
       drops.forEach(drop => drop.remove());
+
+      // Reset timer value and display
+      timeRemaining = 30;
+      document.getElementById("time").textContent = timeRemaining;
+
+      // Clear any existing countdown interval
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+
+      // If the game is running, restart the countdown from the reset value
+      if (gameRunning) {
+        timerId = setInterval(() => {
+          timeRemaining--;
+          document.getElementById("time").textContent = timeRemaining;
+          if (timeRemaining <= 0) {
+            endGame();
+          }
+        }, 1000);
+      }
     });
   }
 });
