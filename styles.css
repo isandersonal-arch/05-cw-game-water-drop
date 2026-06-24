@@ -112,7 +112,7 @@ body {
     cursor: pointer;
     padding: 20px;  /* Add padding for larger click area */
     margin: -15px;  /* Offset padding to maintain visual size */
-    transition: transform 0.1s ease;  /* Smooth hover effect */
+    transition: transform 0.1s ease, background-color 0.15s ease;  /* Smooth hover and color transition */
 }
 
 .water-drop:hover {
@@ -121,6 +121,17 @@ body {
 
 .bad-drop {
     background-color: #426921;
+}
+
+/* Visual feedback when a drop is clicked */
+.water-drop.clicked {
+    background-color: #8BD1CB; /* light blue */
+    transform: scale(1.2);
+}
+
+.bad-drop.clicked {
+    background-color: #F5402C; /* red */
+    transform: scale(1.2);
 }
 
 .game-title {

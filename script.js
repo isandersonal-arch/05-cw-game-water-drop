@@ -156,14 +156,24 @@ function createDrop() {
     // Ignore clicks when the game is not running
     if (!gameRunning) return;
 
-    if (drop.classList.contains("bad-drop")) {
+    // Prevent double-clicks
+    drop.style.pointerEvents = "none";
+
+    const wasBad = drop.classList.contains("bad-drop");
+    if (wasBad) {
       score--; // Bad drops are worth -1
+      drop.classList.add("clicked");
     } else {
       score++; // Good drop
+      drop.classList.add("clicked");
     }
 
     document.getElementById("score").textContent = score; // Update score display
-    drop.remove(); // Remove the drop after clicking
+
+    // Delay removal so the color change is visible
+    setTimeout(() => {
+      drop.remove();
+    }, 180);
   });
 
   // Remove drops that reach the bottom (weren't clicked)
