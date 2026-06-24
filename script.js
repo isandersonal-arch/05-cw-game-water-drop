@@ -32,6 +32,9 @@ function startGame() {
   gameRunning = true;
   timeRemaining = 30; // Reset timer to 30 seconds
   document.getElementById("time").textContent = timeRemaining; // Update display
+  
+  // Hide start modal during gameplay
+  document.getElementById("start-modal").classList.add("hidden");
 
   // Create new drops every second (1000 milliseconds)
   dropMaker = setInterval(createDrop, 1000);
