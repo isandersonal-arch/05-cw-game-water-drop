@@ -89,6 +89,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // Start new game
     startGame();
   });
+
+  // Reset button clears score and removes all drops but does not restart the game
+  const resetBtn = document.getElementById("reset-btn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      score = 0;
+      document.getElementById("score").textContent = "0";
+
+      // Remove all drops (good and bad)
+      const drops = document.querySelectorAll(".water-drop");
+      drops.forEach(drop => drop.remove());
+    });
+  }
 });
 
 function createDrop() {
