@@ -1,6 +1,26 @@
 // Variables to control game state
 let gameRunning = false; // Keeps track of whether game is active or not
 let dropMaker; // Will store our timer that creates drops regularly
+let score = 0; // Keeps track of the player's score
+let timeRemaining = 30; // Countdown timer starting at 30 seconds
+let timerId; // Will store our timer that counts down
+
+// Arrays of possible messages
+const winningMessages = [
+  "🎉 You Win!",
+  "🌟 Amazing!",
+  "💧 Perfect!",
+  "🏆 Champion!",
+  "⭐ Excellent!"
+];
+
+const losingMessages = [
+  "Try Again! 😢",
+  "Keep Practicing! 🤓",
+  "Not Bad! 🥴",
+  "Better Luck Next Time! 😵‍💫",
+  "You Can Do Better! 🫣"
+];
 
 // Wait for button click to start the game
 document.getElementById("start-btn").addEventListener("click", startGame);
@@ -10,10 +30,63 @@ function startGame() {
   if (gameRunning) return;
 
   gameRunning = true;
+  timeRemaining = 30; // Reset timer to 30 seconds
+  document.getElementById("time").textContent = timeRemaining; // Update display
 
   // Create new drops every second (1000 milliseconds)
   dropMaker = setInterval(createDrop, 1000);
+
+  // Start countdown timer
+  timerId = setInterval(() => {
+    timeRemaining--;
+    document.getElementById("time").textContent = timeRemaining;
+
+    // End game when timer reaches 0
+    if (timeRemaining <= 0) {
+      endGame();
+    }
+  }, 1000);
 }
+
+function endGame() {
+  gameRunning = false;
+  clearInterval(dropMaker); // Stop creating new drops
+  clearInterval(timerId); // Stop the timer
+
+  // Display game over message
+  const modal = document.getElementById("game-over-modal");
+  const title = document.getElementById("game-over-title");
+  const scoreText = document.getElementById("game-over-score");
+
+  if (score >= 20) {
+    const randomWinIndex = Math.floor(Math.random() * winningMessages.length);
+    title.textContent = winningMessages[randomWinIndex];
+  } else {
+    const randomLoseIndex = Math.floor(Math.random() * losingMessages.length);
+    title.textContent = losingMessages[randomLoseIndex];
+  }
+
+  scoreText.textContent = `Final Score: ${score}`;
+  modal.classList.remove("hidden");
+}
+
+// Handle restart button
+document.addEventListener("DOMContentLoaded", () => {
+  const restartBtn = document.getElementById("restart-btn");
+  restartBtn.addEventListener("click", () => {
+    // Reset game state
+    score = 0;
+    document.getElementById("score").textContent = "0";
+    document.getElementById("game-over-modal").classList.add("hidden");
+    
+    // Clear remaining drops from previous game
+    const drops = document.querySelectorAll(".water-drop");
+    drops.forEach(drop => drop.remove());
+    
+    // Start new game
+    startGame();
+  });
+});
 
 function createDrop() {
   // Create a new div element that will be our water drop
@@ -37,6 +110,13 @@ function createDrop() {
 
   // Add the new drop to the game screen
   document.getElementById("game-container").appendChild(drop);
+
+  // Handle click events on the drop
+  drop.addEventListener("click", () => {
+    score++; // Increment score
+    document.getElementById("score").textContent = score; // Update score display
+    drop.remove(); // Remove the drop after clicking
+  });
 
   // Remove drops that reach the bottom (weren't clicked)
   drop.addEventListener("animationend", () => {
